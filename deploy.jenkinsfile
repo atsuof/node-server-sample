@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    stages {
+        stage('prepare') {
+            steps {
+                cleanWs()
+                dir('/home/jenkins/pre_deploy/node-server-sample/dist') {
+                    deleteDir()
+                }
+                copyArtifacts filter: '**/**/*', fingerprintArtifacts: true, 
+                    projectName: 'integrate_node-server-sample', selector: specific('${build_number}'),
+                    target: '/home/jenkins/pre_deploy/node-server-sample'
+                dir('/home/jenkins/pre_deploy/node-server-sample/docker') {
+                    withEnv(["proxy_user=${proxy_user}","proxy_pwd=${proxy_pwd}","proxy_uri=proxy.sample.co.jp:80"]) {
+                        sh "docker-compose -f docker-compose-chkserver-update.yml build --no-cache"
+                    }
+                }
+            }
+        }
+    }
+}

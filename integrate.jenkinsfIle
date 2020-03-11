@@ -1,0 +1,41 @@
+pipeline {
+    agent {docker 'node-server-sample:1.0'}
+    stages {
+        stage('prepare') {
+            steps {
+                dir('src') {
+                    deleteDir()
+                }
+                dir('test') {
+                    deleteDir()
+                }
+                dir('dist') {
+                    deleteDir()
+                }
+                dir('reports') {
+                    deleteDir()
+                }
+                dir('coverage') {
+                }
+                checkout([$class: 'GitSCM', branches: [[name: '*/develop']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitcredencial', url: 'https://xxx/node-server-sample.git']]])
+                sh 'npm install'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'npm run test'
+            }
+        }
+        stage('artifacts'){
+            steps{
+                junit 'reports/report.xml'
+                archiveArtifacts artifacts: '**/**', excludes: '.vscode/**,coverage/**,reports/**,tests/**,node_modules/**,dist/**', onlyIfSuccessful: true
+            }
+        }
+    }
+}
