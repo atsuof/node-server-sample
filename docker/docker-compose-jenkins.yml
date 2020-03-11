@@ -10,7 +10,7 @@ services:
       - https_proxy=https://${proxy_user}:${proxy_pwd}@${proxy_uri}
       - curl_user=${proxy_user}:${proxy_pwd}
       - curl_proxy=http://${proxy_uri}
-    image: node-server-sample-security-jenkins:1.0
+    image: node-server-sample-jenkins:1.0
     container_name: node-server-sample-jenkins
     tty: true
     cap_add:
@@ -21,6 +21,6 @@ services:
     - 8080:8080
     - 127.0.0.1:7777:22
     volumes:
-    - ./../../node-server-sample-security-jenkins:/var/jenkins_home
+    - ./../../node-server-sample-jenkins:/var/jenkins_home
     - /var/run/docker.sock:/var/run/docker.sock
-    - ./../../deploytest/node-server-sample-security-checkserver:/home/jenkins/pre_deploy/node-server-sample
+    - ./../../deploytest/node-server-sample:/home/jenkins/pre_deploy/node-server-sample
