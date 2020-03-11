@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  node-server-sample-security-jenkins:
+  node-server-sample-jenkins:
     build:
       context: ./jenkins
       dockerfile: Dockerfile-jkns
@@ -11,7 +11,7 @@ services:
       - curl_user=${proxy_user}:${proxy_pwd}
       - curl_proxy=http://${proxy_uri}
     image: node-server-sample-security-jenkins:1.0
-    container_name: node-server-sample-security-jenkins
+    container_name: node-server-sample-jenkins
     tty: true
     cap_add:
     - SYS_ADMIN
@@ -23,4 +23,4 @@ services:
     volumes:
     - ./../../node-server-sample-security-jenkins:/var/jenkins_home
     - /var/run/docker.sock:/var/run/docker.sock
-    - ./../../deploytest/node-server-sample-security-checkserver:/home/jenkins/pre_deploy/node-server-sample-security-checkserver
+    - ./../../deploytest/node-server-sample-security-checkserver:/home/jenkins/pre_deploy/node-server-sample
